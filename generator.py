@@ -14,6 +14,9 @@ from data_magic import (
 from models import AttributeSet, SecondaryStats, Character
 
 
+BASE_PROFESSION_TRAINED_SKILLS = 6
+
+
 def generate_base_attributes() -> AttributeSet:
     """Slå fram sex grundegenskaper enligt 4T6, ta bort lägsta, slumpa placering."""
     rolls: List[int] = [roll_4d6_drop_lowest() for _ in range(6)]
@@ -162,6 +165,14 @@ def generate_character() -> Character:
 
     gear_summary = f"Standardutrustning för {prof.name} (komplettera enligt regelboken)."
 
+    # Färdigheter: alla rollpersoner får 6 tränade färdigheter via yrket
+    # och sedan bonus utifrån ålder.
+    skill_values = {
+        "base_trained_skills": BASE_PROFESSION_TRAINED_SKILLS,
+        "extra_trained_skills": age.extra_trained_skills,
+        "total_trained_skills": BASE_PROFESSION_TRAINED_SKILLS + age.extra_trained_skills,
+    }
+
     character = Character(
         name=name,
         race=race,
@@ -170,6 +181,7 @@ def generate_character() -> Character:
         attributes=attrs,
         secondary=secondary,
         hero_ability_name=hero_ability,
+        skill_values=skill_values,
         gear_summary=gear_summary,
     )
 
