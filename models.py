@@ -55,6 +55,8 @@ class Character:
             "Profession": self.profession_name,
             "Age": self.age.name,
 
+            "Skills": self._format_skill_summary(),
+
             "STY": str(self.attributes.STY),
             "FYS": str(self.attributes.FYS),
             "SMI": str(self.attributes.SMI),
@@ -76,3 +78,20 @@ class Character:
             "Tricks": "\n".join(self.known_tricks),
             "Spells": "\n".join(self.known_spells),
         }
+
+    def _format_skill_summary(self) -> str:
+        if not self.skill_values:
+            return ""
+
+        total = self.skill_values.get("total_trained_skills")
+        base = self.skill_values.get("base_trained_skills")
+        extra = self.skill_values.get("extra_trained_skills")
+
+        if total is None:
+            return ""
+
+        if extra:
+            base_part = base if base is not None else "6"
+            return f"Tränade färdigheter: {total} ({base_part} + {extra} från ålder)"
+
+        return f"Tränade färdigheter: {total}"
